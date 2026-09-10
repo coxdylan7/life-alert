@@ -5,7 +5,7 @@
   "version": "0.1.0",
   "author": "djc",
   "license": "MIT",
-  "description": "Escalating battery drain warnings: configurable thresholds, sound at extreme levels, and a cancelable auto-sleep before the battery dies",
+  "description": "Battery companion for Omarchy: escalating full-screen warnings at configurable thresholds, urgent sound at extreme levels, battery-low hook, and a cancelable auto-suspend before the battery dies - polls faster when critical and re-arms on charge",
   "kinds": [
     "service",
     "overlay"

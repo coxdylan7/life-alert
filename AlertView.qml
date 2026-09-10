@@ -267,11 +267,23 @@ Item {
 
           Text {
             anchors.horizontalCenter: parent.horizontalCenter
-            text: root.timeLabel
+            text: root.percent + "%"
             color: Color.foreground
             font.family: Style.font.family
             font.pixelSize: root.huge
             font.bold: true
+            horizontalAlignment: Text.AlignHCenter
+            wrapMode: Text.Wrap
+          }
+
+          Text {
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: root.timeLabel
+            color: Util.alpha(Color.foreground, 0.8)
+            font.family: Style.font.family
+            font.pixelSize: Style.font.body
+            horizontalAlignment: Text.AlignHCenter
+            wrapMode: Text.Wrap
           }
 
           Text {
@@ -346,11 +358,23 @@ Item {
 
             Text {
               anchors.horizontalCenter: parent.horizontalCenter
-              text: root.timeLabel
+              text: root.percent + "%"
               color: root.flashColor
               font.family: Style.font.family
               font.pixelSize: root.giant
               font.bold: true
+              horizontalAlignment: Text.AlignHCenter
+              wrapMode: Text.Wrap
+            }
+
+            Text {
+              anchors.horizontalCenter: parent.horizontalCenter
+              text: root.timeLabel
+              color: Util.alpha(root.flashColor, 0.8)
+              font.family: Style.font.family
+              font.pixelSize: Style.font.body
+              horizontalAlignment: Text.AlignHCenter
+              wrapMode: Text.Wrap
             }
 
             Text {
@@ -380,7 +404,7 @@ Item {
               font.pixelSize: Style.font.body
               horizontalAlignment: Text.AlignHCenter
               wrapMode: Text.Wrap
-              visible: root.timeLabel.length > 0
+              visible: true
             }
           }
         }
@@ -438,11 +462,23 @@ Item {
 
             Text {
               anchors.horizontalCenter: parent.horizontalCenter
-              text: root.timeLabel
+              text: root.percent + "%"
               color: root.powerColor
               font.family: Style.font.family
               font.pixelSize: root.giant
               font.bold: true
+              horizontalAlignment: Text.AlignHCenter
+              wrapMode: Text.Wrap
+            }
+
+            Text {
+              anchors.horizontalCenter: parent.horizontalCenter
+              text: root.timeLabel
+              color: Util.alpha(root.powerColor, 0.8)
+              font.family: Style.font.family
+              font.pixelSize: Style.font.body
+              horizontalAlignment: Text.AlignHCenter
+              wrapMode: Text.Wrap
             }
 
             Text {
@@ -483,7 +519,7 @@ Item {
               font.pixelSize: Style.font.body
               horizontalAlignment: Text.AlignHCenter
               wrapMode: Text.Wrap
-              visible: root.timeLabel.length > 0
+              visible: true
             }
 
             Text {

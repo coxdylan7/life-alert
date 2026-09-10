@@ -23,6 +23,7 @@ before the battery dies.
 - Fires each level **once per drain cycle** — re-arms only after you charge
   back above the level. Dismissing the final alarm keeps it quiet until you
   charge back above `finalPercent`.
+- Instant plug/unplug overlays — a full-screen card appears for a few seconds whenever the charger is connected or disconnected, showing the current charge and estimated runtime (tap to dismiss).
 
 ## Requirements
 
@@ -57,7 +58,8 @@ entry to the `plugins` array in `~/.config/omarchy/shell.json`:
       "flashSeconds": 12,
       "soundFrom": 20,
       "sleepOnFinal": true,
-      "sleepCountdownSeconds": 30
+      "sleepCountdownSeconds": 30,
+      "powerToastSeconds": 4
     }
   ]
 }
@@ -78,6 +80,7 @@ The config above is the default; all keys are optional.
 | `soundFrom` | `20` | Levels at or below this play the warning sound. |
 | `sleepOnFinal` | `true` | Whether the final alarm suspends after the countdown. |
 | `sleepCountdownSeconds` | `30` | Seconds from the final alarm until `systemctl suspend`, unless a key is pressed. |
+| `powerToastSeconds` | `4` | How long the plug/unplug overlay stays on screen. |
 
 ### Behavior details
 

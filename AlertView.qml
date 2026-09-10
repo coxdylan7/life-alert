@@ -14,6 +14,7 @@ Item {
   readonly property bool ready: service !== null
   readonly property bool finalMode: ready && service.finalAlarm
   readonly property bool flashMode: ready && service.flashActive && !service.finalAlarm
+  readonly property bool powerMode: ready && service.powerToastActive && !service.finalAlarm && !service.flashActive
 
   readonly property int flashLevel: ready ? service.flashLevel : 100
   readonly property color flashColor: {
@@ -24,6 +25,15 @@ Item {
 
   readonly property int percent: ready ? service.percent : -1
   readonly property int minutes: ready ? service.minutesRemaining : -1
+  readonly property color powerColor: {
+    if (!ready) return Color.foreground
+    if (service.discharging) {
+      if (percent <= 20) return Color.urgent
+      if (percent <= 50) return Color.accent
+      return Color.foreground
+    }
+    return Color.accent
+  }
 
   readonly property string timeLabel: {
     if (minutes < 0) return ""
@@ -50,12 +60,16 @@ Item {
     if (root.service) root.service.cancelSleep()
   }
 
+  function dismissPower() {
+    if (root.service && root.service.dismissPowerToast) root.service.dismissPowerToast()
+  }
+
   readonly property int giant: Math.max(64, Math.round(Style.font.displayLarge * 3.2))
   readonly property int huge: Math.max(40, Math.round(Style.font.displayLarge * 2))
 
   PanelWindow {
     id: panel
-    visible: root.ready && (root.finalMode || root.flashMode)
+    visible: root.ready && (root.finalMode || root.flashMode || root.powerMode)
     anchors { top: true; bottom: true; left: true; right: true }
     color: "transparent"
     WlrLayershell.namespace: "omarchy-life-alert"
@@ -211,6 +225,91 @@ Item {
             font.family: Style.font.family
             font.pixelSize: Style.font.body
             visible: root.timeLabel.length > 0
+          }
+        }
+      }
+
+      Item {
+        id: powerView
+        anchors.fill: parent
+        visible: root.powerMode
+        opacity: root.powerMode ? 1 : 0
+        Behavior on opacity { NumberAnimation { duration: 260; easing.type: Easing.OutCubic } }
+
+        MouseArea {
+          anchors.fill: parent
+          onClicked: root.dismissPower()
+        }
+
+        Column {
+          anchors.centerIn: parent
+          spacing: Style.space(10)
+          width: Math.min(parent.width - Style.space(80), 900)
+
+          Text {
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: service && service.discharging ? "UNPLUGGED" : "PLUGGED IN"
+            color: Util.alpha(root.powerColor, 0.7)
+            font.family: Style.font.family
+            font.pixelSize: Style.font.heading
+            font.bold: true
+          }
+
+          Text {
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: root.percent + "%"
+            color: root.powerColor
+            font.family: Style.font.family
+            font.pixelSize: root.giant
+            font.bold: true
+          }
+
+          Text {
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: LifeAlert.meter(root.percent, 30)
+            color: root.powerColor
+            font.family: Style.font.family
+            font.pixelSize: Style.font.title
+            font.bold: true
+          }
+
+          Text {
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: service ? service.powerToastMessage : ""
+            color: Color.foreground
+            font.family: Style.font.family
+            font.pixelSize: Style.font.title
+            horizontalAlignment: Text.AlignHCenter
+            wrapMode: Text.Wrap
+          }
+
+          Text {
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: service ? service.powerToastSubMessage : ""
+            color: Util.alpha(Color.foreground, 0.6)
+            font.family: Style.font.family
+            font.pixelSize: Style.font.body
+            horizontalAlignment: Text.AlignHCenter
+            wrapMode: Text.Wrap
+            visible: service && service.powerToastSubMessage.length > 0
+          }
+
+          Text {
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: root.timeLabel
+            color: Util.alpha(Color.foreground, 0.6)
+            font.family: Style.font.family
+            font.pixelSize: Style.font.body
+            visible: root.timeLabel.length > 0
+          }
+
+          Text {
+            anchors.horizontalCenter: parent.horizontalCenter
+            text: "Tap to dismiss"
+            color: Util.alpha(Color.foreground, 0.35)
+            font.family: Style.font.family
+            font.pixelSize: Style.font.caption
+            visible: root.powerMode
           }
         }
       }

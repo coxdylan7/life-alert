@@ -24,6 +24,7 @@ Item {
   readonly property int flashSeconds: LifeAlert.configInt(pluginEntry, "flashSeconds", 12)
   readonly property int sleepCountdownSeconds: LifeAlert.configInt(pluginEntry, "sleepCountdownSeconds", 30)
   readonly property bool sleepOnFinal: pluginEntry.sleepOnFinal !== false
+  readonly property int powerToastSeconds: LifeAlert.configInt(pluginEntry, "powerToastSeconds", 4)
 
   property int percent: -1
   property int minutesRemaining: -1
@@ -35,13 +36,44 @@ Item {
   property bool sleepCanceled: false
   property bool dismissed: false
   property int countdownSeconds: 0
+  property bool powerToastActive: false
+  property string powerToastMessage: ""
+  property string powerToastSubMessage: ""
+
+  function showPowerToast(nowDischarging) {
+    if (root.finalAlarm) return
+    if (nowDischarging) {
+      powerToastMessage = "CHARGER DISCONNECTED"
+      var sub = "Running on battery — " + percent + "%"
+      if (minutesRemaining >= 0) sub += " • " + minutesRemaining + " min left"
+      powerToastSubMessage = sub
+      console.log("life-alert: charger disconnected at " + percent + "%")
+    } else {
+      powerToastMessage = "CHARGER CONNECTED"
+      powerToastSubMessage = "On AC power — " + percent + "%"
+      console.log("life-alert: charger connected at " + percent + "%")
+    }
+    powerToastActive = true
+    powerToastTimer.restart()
+  }
+
+  function dismissPowerToast() {
+    powerToastActive = false
+    powerToastTimer.stop()
+  }
 
   function checkBattery() {
+    var prevDischarging = root.discharging
+    var prevPercent = root.percent
     percent = LifeAlert.batteryPercentage(UPower.displayDevice)
     discharging = LifeAlert.isDischarging(UPower.displayDevice, UPower.onBattery, UPowerDeviceState.Discharging)
     minutesRemaining = LifeAlert.minutesRemaining(UPower.displayDevice)
 
     pollTimer.interval = pollingInterval()
+
+    if (prevPercent >= 0 && prevDischarging !== discharging) {
+      showPowerToast(discharging)
+    }
 
     if (!discharging) {
       deactivateFinal()
@@ -156,6 +188,12 @@ Item {
     id: flashTimer
     interval: root.flashSeconds * 1000
     onTriggered: root.flashActive = false
+  }
+
+  Timer {
+    id: powerToastTimer
+    interval: root.powerToastSeconds * 1000
+    onTriggered: root.powerToastActive = false
   }
 
   Timer {

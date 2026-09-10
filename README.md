@@ -59,7 +59,9 @@ entry to the `plugins` array in `~/.config/omarchy/shell.json`:
       "soundFrom": 20,
       "sleepOnFinal": true,
       "sleepCountdownSeconds": 30,
-      "powerToastSeconds": 4
+      "powerToastSeconds": 4,
+      "logoCloseout": true,
+      "logoColor": "theme"
     }
   ]
 }
@@ -81,6 +83,8 @@ The config above is the default; all keys are optional.
 | `sleepOnFinal` | `true` | Whether the final alarm suspends after the countdown. |
 | `sleepCountdownSeconds` | `30` | Seconds from the final alarm until `systemctl suspend`, unless a key is pressed. |
 | `powerToastSeconds` | `4` | How long the plug/unplug overlay stays on screen. |
+| `logoCloseout` | `true` | Whether the Omarchy logo animation plays as a notification fades out. |
+| `logoColor` | `"theme"` | Logo color during the close-out: `"theme"`, `"white"`, or `"black"`. |
 
 ### Behavior details
 

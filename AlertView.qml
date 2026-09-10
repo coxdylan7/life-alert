@@ -267,7 +267,7 @@ Item {
 
           Text {
             anchors.horizontalCenter: parent.horizontalCenter
-            text: root.percent + "%"
+            text: root.timeLabel
             color: Color.foreground
             font.family: Style.font.family
             font.pixelSize: root.huge
@@ -295,11 +295,11 @@ Item {
 
           Text {
             anchors.horizontalCenter: parent.horizontalCenter
-            text: root.timeLabel
+            text: ""
             color: Util.alpha(Color.foreground, 0.6)
             font.family: Style.font.family
             font.pixelSize: Style.font.body
-            visible: root.timeLabel.length > 0
+            visible: false
           }
         }
       }
@@ -346,7 +346,7 @@ Item {
 
             Text {
               anchors.horizontalCenter: parent.horizontalCenter
-              text: root.percent + "%"
+              text: root.timeLabel
               color: root.flashColor
               font.family: Style.font.family
               font.pixelSize: root.giant
@@ -438,7 +438,7 @@ Item {
 
             Text {
               anchors.horizontalCenter: parent.horizontalCenter
-              text: root.percent + "%"
+              text: root.timeLabel
               color: root.powerColor
               font.family: Style.font.family
               font.pixelSize: root.giant

@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "id": "djc.life-alert",
+  "name": "Life Alert",
+  "version": "0.1.0",
+  "author": "djc",
+  "license": "MIT",
+  "description": "Escalating battery drain warnings: configurable thresholds, sound at extreme levels, and a cancelable auto-sleep before the battery dies",
+  "kinds": [
+    "service",
+    "overlay"
+  ],
+  "keepLoaded": true,
+  "entryPoints": {
+    "service": "Service.qml",
+    "overlay": "AlertView.qml"
+  }
+}

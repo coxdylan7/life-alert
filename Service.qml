@@ -47,11 +47,11 @@ Item {
     if (root.finalAlarm) return
     if (nowDischarging) {
       powerToastMessage = "CHARGER DISCONNECTED"
-      powerToastSubMessage = "Running on battery — " + percent + "%"
+      powerToastSubMessage = "Running on battery"
       console.log("life-alert: charger disconnected at " + percent + "%")
     } else {
       powerToastMessage = "CHARGER CONNECTED"
-      powerToastSubMessage = "On AC power — " + percent + "%"
+      powerToastSubMessage = "On AC power"
       console.log("life-alert: charger connected at " + percent + "%")
     }
     powerToastActive = true

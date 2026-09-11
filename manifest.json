@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "djc.life-alert",
   "name": "Life Alert",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "author": "djc",
   "license": "MIT",
   "description": "Battery companion for Omarchy: escalating full-screen warnings at configurable thresholds, urgent sound at extreme levels, battery-low hook, cancelable auto-suspend before the battery dies, and plug/unplug overlays - polls faster when critical and re-arms on charge",

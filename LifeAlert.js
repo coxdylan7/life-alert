@@ -13,7 +13,12 @@ function minutesRemaining(device) {
   if (isFinite(tte) && tte > 0) return Math.max(0, Math.round(tte / 60))
   var energy = Number(device.energy || 0)
   var rate = Number(device.changeRate || 0)
-  if (!isFinite(energy) || energy <= 0 || !isFinite(rate) || rate <= 0) return -1
+  if (!isFinite(energy) || energy <= 0) return -1
+  if (!isFinite(rate) || rate <= 0) {
+    // No rate yet after unplug — estimate with 10W nominal so user sees minutes immediately
+    if (energy > 0 && energy < 50) return Math.max(0, Math.round((energy / 10) * 60))
+    return -1
+  }
   return Math.max(0, Math.round((energy / rate) * 60))
 }
 

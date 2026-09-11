@@ -318,31 +318,6 @@ Item {
         }
       }
 
-      // DEBUG: always-visible time for testing at 96% steady state — remove after verification
-      Item {
-        id: debugView
-        anchors.fill: parent
-        visible: root.ready && !root.finalMode && !root.flashMode && !root.powerMode && root.timeLabel.length > 0
-        opacity: root.ready && !root.finalMode && !root.flashMode && !root.powerMode ? 0.85 : 0
-        Rectangle {
-          anchors.centerIn: parent
-          width: debugCol.width + Style.space(32)
-          height: debugCol.height + Style.space(24)
-          radius: root.cardRadius
-          color: root.cardFill
-          border.color: root.cardBorder
-          border.width: 1
-          Column {
-            id: debugCol
-            anchors.centerIn: parent
-            spacing: Style.space(6)
-            Text { anchors.horizontalCenter: parent.horizontalCenter; text: "DEBUG " + root.percent + "%"; color: Color.foreground; font.family: Style.font.family; font.pixelSize: Style.font.body; font.bold: true }
-            Text { anchors.horizontalCenter: parent.horizontalCenter; text: root.timeLabel; color: Util.alpha(Color.foreground, 0.8); font.family: Style.font.family; font.pixelSize: Style.font.body; horizontalAlignment: Text.AlignHCenter }
-            Text { anchors.horizontalCenter: parent.horizontalCenter; text: service ? service.powerToastSubMessage : ""; color: Util.alpha(Color.foreground, 0.6); font.family: Style.font.family; font.pixelSize: Style.font.caption; visible: service && service.powerToastSubMessage.length>0 }
-          }
-        }
-      }
-
       Item {
         id: flashView
         anchors.fill: parent

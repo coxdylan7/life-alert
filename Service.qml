@@ -30,6 +30,7 @@ Item {
   property int minutesRemaining: -1
   property int minutesUntilFull: -1
   property bool discharging: false
+  property bool isFullyCharged: false
   property var armed: ({})
   property bool flashActive: false
   property int flashLevel: -1
@@ -52,7 +53,7 @@ Item {
     } else {
       powerToastMessage = "CHARGER CONNECTED"
       var sub2 = "On AC power — " + percent + "%"
-      if (percent >= 100) sub2 += " • Fully charged"
+      if (percent >= 100 || isFullyCharged) sub2 += " • Fully charged"
       else if (minutesUntilFull >= 0) sub2 += " • " + minutesUntilFull + " min until full"
       powerToastSubMessage = sub2
       console.log("life-alert: charger connected at " + percent + "%")
@@ -71,6 +72,7 @@ Item {
     var prevPercent = root.percent
     percent = LifeAlert.batteryPercentage(UPower.displayDevice)
     discharging = LifeAlert.isDischarging(UPower.displayDevice, UPower.onBattery, UPowerDeviceState.Discharging)
+    isFullyCharged = !!(UPower.displayDevice && UPower.displayDevice.isPresent && UPower.displayDevice.state === UPowerDeviceState.FullyCharged)
     minutesRemaining = LifeAlert.minutesRemaining(UPower.displayDevice)
     minutesUntilFull = LifeAlert.minutesUntilFull(UPower.displayDevice)
 

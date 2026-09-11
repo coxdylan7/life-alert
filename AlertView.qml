@@ -47,14 +47,13 @@ Item {
       if (minutes === 1) return "1 min of battery left"
       return minutes + " min of battery left"
     } else {
-      if (percent >= 100) return "Fully charged"
+      if (percent >= 100 || (service && service.isFullyCharged)) return "Fully charged"
       if (minutesUntilFull < 0) return ""
       if (minutesUntilFull >= 120) return Math.round(minutesUntilFull / 60) + "h until full"
       if (minutesUntilFull === 1) return "1 min until full"
       return minutesUntilFull + " min until full"
     }
   }
-
   readonly property string flashMessage: {
     if (flashLevel <= 10) return "CRITICAL — PLUG IN NOW"
     if (flashLevel <= 20) return "Critically low — plug in soon"

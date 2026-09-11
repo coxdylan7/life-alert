@@ -22,13 +22,17 @@ function minutesUntilFull(device) {
   var ttf = Number(device.timeToFull || 0)
   if (isFinite(ttf) && ttf > 0) return Math.max(0, Math.round(ttf / 60))
   var energy = Number(device.energy || 0)
-  var energyFull = Number(device.energyFull || 0)
+  // Quickshell exposes capacity as energyCapacity, not energyFull
+  var energyFull = Number(device.energyCapacity !== undefined ? device.energyCapacity : device.energyFull || 0)
+  if (!isFinite(energyFull) && device.energyFull !== undefined) energyFull = Number(device.energyFull || 0)
   var rate = Number(device.changeRate || 0)
   // When charging, energy increases — remaining energy until full is energyFull - energy.
   // changeRate may be reported as absolute value or positive while charging; use absolute.
   if (!isFinite(energy) || !isFinite(energyFull) || energyFull <= 0) return -1
   var remaining = energyFull - energy
   if (remaining <= 0) return 0
+  // If rate is 0 but we are fully charged, treat as 0 remaining (Fully charged case handles display)
+  // Otherwise rate 0 means unknown
   if (!isFinite(rate) || rate === 0) return -1
   var absRate = Math.abs(rate)
   if (!isFinite(absRate) || absRate <= 0) return -1

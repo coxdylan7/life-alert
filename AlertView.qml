@@ -32,12 +32,8 @@ Item {
   readonly property bool isDischarging: ready ? service.discharging : true
   readonly property color powerColor: {
     if (!ready) return Color.foreground
-    if (service.discharging) {
-      if (percent <= 20) return Color.urgent
-      if (percent <= 50) return Color.accent
-      return Color.foreground
-    }
-    return Color.accent
+    if (service.discharging) return Color.urgent
+    return "#4ade80"
   }
 
   readonly property string timeLabel: {

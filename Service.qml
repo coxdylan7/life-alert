@@ -31,6 +31,7 @@ Item {
   property int minutesUntilFull: -1
   property bool discharging: false
   property bool isFullyCharged: false
+  property double lastPowerTransitionMs: 0
   property var armed: ({})
   property bool flashActive: false
   property int flashLevel: -1
@@ -70,6 +71,8 @@ Item {
   function checkBattery() {
     var prevDischarging = root.discharging
     var prevPercent = root.percent
+    var prevMinutesRemaining = root.minutesRemaining
+    var prevMinutesUntilFull = root.minutesUntilFull
     percent = LifeAlert.batteryPercentage(UPower.displayDevice)
     discharging = LifeAlert.isDischarging(UPower.displayDevice, UPower.onBattery, UPowerDeviceState.Discharging)
     isFullyCharged = !!(UPower.displayDevice && UPower.displayDevice.isPresent && UPower.displayDevice.state === UPowerDeviceState.FullyCharged)
@@ -78,8 +81,28 @@ Item {
 
     pollTimer.interval = pollingInterval()
 
-    if (prevPercent >= 0 && prevDischarging !== discharging) {
+    var nowMs = Date.now()
+    var justTransitioned = (prevPercent >= 0 && prevDischarging !== discharging)
+    if (justTransitioned) {
+      lastPowerTransitionMs = nowMs
       showPowerToast(discharging)
+    } else if (discharging && minutesRemaining >= 0 && prevMinutesRemaining < 0 && (nowMs - lastPowerTransitionMs) < 30000) {
+      // Minutes just became available shortly after unplug — re-show toast with time
+      showPowerToast(discharging)
+    } else if (!discharging && minutesUntilFull >= 0 && prevMinutesUntilFull < 0 && (nowMs - lastPowerTransitionMs) < 30000) {
+      // Minutes until full just became available after plug-in — re-show
+      showPowerToast(discharging)
+    } else if (powerToastActive) {
+      // Keep sub-message up to date while toast is visible
+      if (discharging && minutesRemaining >= 0 && powerToastSubMessage.indexOf("min left") === -1) {
+        var upd = "Running on battery — " + percent + "%"
+        upd += " • " + minutesRemaining + " min left"
+        powerToastSubMessage = upd
+      } else if (!discharging && !isFullyCharged && minutesUntilFull >= 0 && powerToastSubMessage.indexOf("min until full") === -1 && powerToastSubMessage.indexOf("Fully charged") === -1) {
+        var upd2 = "On AC power — " + percent + "%"
+        upd2 += " • " + minutesUntilFull + " min until full"
+        powerToastSubMessage = upd2
+      }
     }
 
     if (!discharging) {

@@ -48,11 +48,13 @@ Item {
       return minutes + " min of battery left"
     } else {
       if (percent >= 100 || (service && service.isFullyCharged && percent >= 99)) return "Fully charged"
-      if (service && service.isFullyCharged && percent < 99) return "Charging limited — " + percent + "%"
-      if (minutesUntilFull < 0) return ""
-      if (minutesUntilFull >= 120) return Math.round(minutesUntilFull / 60) + "h until full"
-      if (minutesUntilFull === 1) return "1 min until full"
-      return minutesUntilFull + " min until full"
+      if (minutesUntilFull >= 0) {
+        if (minutesUntilFull >= 120) return Math.round(minutesUntilFull / 60) + "h until full"
+        if (minutesUntilFull === 1) return "1 min until full"
+        return minutesUntilFull + " min until full"
+      }
+      if (service && service.isFullyCharged) return "Charging limited — " + percent + "%"
+      return ""
     }
   }
   readonly property string flashMessage: {

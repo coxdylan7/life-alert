@@ -428,11 +428,6 @@ Item {
             shadowVerticalOffset: 3
           }
 
-          MouseArea {
-            anchors.fill: parent
-            onClicked: root.dismissPower()
-          }
-
           Column {
             id: powerCol
             anchors.centerIn: parent
@@ -501,6 +496,7 @@ Item {
             }
 
             Text {
+              id: tapToDismissText
               anchors.horizontalCenter: parent.horizontalCenter
               text: "Tap to dismiss"
               color: Util.alpha(Color.foreground, 0.75)
@@ -509,6 +505,11 @@ Item {
               font.bold: true
               visible: root.powerMode
             }
+          }
+
+          MouseArea {
+            anchors.fill: parent
+            onClicked: root.dismissPower()
           }
         }
       }

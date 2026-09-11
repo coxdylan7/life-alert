@@ -184,7 +184,7 @@ Item {
     WlrLayershell.layer: WlrLayer.Overlay
     WlrLayershell.keyboardFocus: root.finalMode ? WlrKeyboardFocus.Exclusive : WlrKeyboardFocus.None
     exclusionMode: ExclusionMode.Ignore
-    mask: Region {}
+    mask: Region { item: keyCatcher }
 
     Item {
       id: keyCatcher

@@ -28,6 +28,8 @@ Item {
 
   readonly property int percent: ready ? service.percent : -1
   readonly property int minutes: ready ? service.minutesRemaining : -1
+  readonly property int minutesUntilFull: ready ? service.minutesUntilFull : -1
+  readonly property bool isDischarging: ready ? service.discharging : true
   readonly property color powerColor: {
     if (!ready) return Color.foreground
     if (service.discharging) {
@@ -39,10 +41,18 @@ Item {
   }
 
   readonly property string timeLabel: {
-    if (minutes < 0) return ""
-    if (minutes >= 120) return Math.round(minutes / 60) + "h of battery left"
-    if (minutes === 1) return "1 min of battery left"
-    return minutes + " min of battery left"
+    if (isDischarging) {
+      if (minutes < 0) return ""
+      if (minutes >= 120) return Math.round(minutes / 60) + "h of battery left"
+      if (minutes === 1) return "1 min of battery left"
+      return minutes + " min of battery left"
+    } else {
+      if (percent >= 100) return "Fully charged"
+      if (minutesUntilFull < 0) return ""
+      if (minutesUntilFull >= 120) return Math.round(minutesUntilFull / 60) + "h until full"
+      if (minutesUntilFull === 1) return "1 min until full"
+      return minutesUntilFull + " min until full"
+    }
   }
 
   readonly property string flashMessage: {
@@ -284,6 +294,7 @@ Item {
             font.pixelSize: Style.font.body
             horizontalAlignment: Text.AlignHCenter
             wrapMode: Text.Wrap
+            visible: root.timeLabel.length > 0
           }
 
           Text {
@@ -303,15 +314,6 @@ Item {
             font.pixelSize: Style.font.heading
             horizontalAlignment: Text.AlignHCenter
             wrapMode: Text.Wrap
-          }
-
-          Text {
-            anchors.horizontalCenter: parent.horizontalCenter
-            text: ""
-            color: Util.alpha(Color.foreground, 0.6)
-            font.family: Style.font.family
-            font.pixelSize: Style.font.body
-            visible: false
           }
         }
       }
@@ -375,6 +377,7 @@ Item {
               font.pixelSize: Style.font.body
               horizontalAlignment: Text.AlignHCenter
               wrapMode: Text.Wrap
+              visible: root.timeLabel.length > 0
             }
 
             Text {
@@ -394,17 +397,6 @@ Item {
               font.pixelSize: Style.font.title
               horizontalAlignment: Text.AlignHCenter
               wrapMode: Text.Wrap
-            }
-
-            Text {
-              width: parent.width
-              text: root.timeLabel
-              color: Util.alpha(Color.foreground, 0.6)
-              font.family: Style.font.family
-              font.pixelSize: Style.font.body
-              horizontalAlignment: Text.AlignHCenter
-              wrapMode: Text.Wrap
-              visible: true
             }
           }
         }
@@ -479,6 +471,7 @@ Item {
               font.pixelSize: Style.font.body
               horizontalAlignment: Text.AlignHCenter
               wrapMode: Text.Wrap
+              visible: root.timeLabel.length > 0
             }
 
             Text {
@@ -509,17 +502,6 @@ Item {
               horizontalAlignment: Text.AlignHCenter
               wrapMode: Text.Wrap
               visible: service && service.powerToastSubMessage.length > 0
-            }
-
-            Text {
-              width: parent.width
-              text: root.timeLabel
-              color: Util.alpha(Color.foreground, 0.6)
-              font.family: Style.font.family
-              font.pixelSize: Style.font.body
-              horizontalAlignment: Text.AlignHCenter
-              wrapMode: Text.Wrap
-              visible: true
             }
 
             Text {

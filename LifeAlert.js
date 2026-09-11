@@ -17,6 +17,24 @@ function minutesRemaining(device) {
   return Math.max(0, Math.round((energy / rate) * 60))
 }
 
+function minutesUntilFull(device) {
+  if (!device || !device.isPresent) return -1
+  var ttf = Number(device.timeToFull || 0)
+  if (isFinite(ttf) && ttf > 0) return Math.max(0, Math.round(ttf / 60))
+  var energy = Number(device.energy || 0)
+  var energyFull = Number(device.energyFull || 0)
+  var rate = Number(device.changeRate || 0)
+  // When charging, energy increases — remaining energy until full is energyFull - energy.
+  // changeRate may be reported as absolute value or positive while charging; use absolute.
+  if (!isFinite(energy) || !isFinite(energyFull) || energyFull <= 0) return -1
+  var remaining = energyFull - energy
+  if (remaining <= 0) return 0
+  if (!isFinite(rate) || rate === 0) return -1
+  var absRate = Math.abs(rate)
+  if (!isFinite(absRate) || absRate <= 0) return -1
+  return Math.max(0, Math.round((remaining / absRate) * 60))
+}
+
 function pluginEntry(shell, pluginId) {
   var cfg = shell ? shell.shellConfig : null
   var list = cfg && Array.isArray(cfg.plugins) ? cfg.plugins : []
@@ -63,6 +81,7 @@ if (typeof module !== "undefined") {
     batteryPercentage: batteryPercentage,
     isDischarging: isDischarging,
     minutesRemaining: minutesRemaining,
+    minutesUntilFull: minutesUntilFull,
     pluginEntry: pluginEntry,
     configInt: configInt,
     normalizeLevels: normalizeLevels,

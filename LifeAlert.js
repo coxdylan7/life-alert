@@ -31,9 +31,15 @@ function minutesUntilFull(device) {
   if (!isFinite(energy) || !isFinite(energyFull) || energyFull <= 0) return -1
   var remaining = energyFull - energy
   if (remaining <= 0) return 0
-  // If rate is 0 but we are fully charged, treat as 0 remaining (Fully charged case handles display)
-  // Otherwise rate 0 means unknown
-  if (!isFinite(rate) || rate === 0) return -1
+  if (!isFinite(rate) || rate === 0) {
+    // No current rate — estimate with nominal 15W charging if we have remaining
+    // so UI shows minutes at 96% threshold where UPower reports 0W
+    if (remaining > 0 && remaining < 5) {
+      // Assume 15W nominal charging for small remaining at threshold
+      return Math.max(0, Math.round((remaining / 15) * 60))
+    }
+    return -1
+  }
   var absRate = Math.abs(rate)
   if (!isFinite(absRate) || absRate <= 0) return -1
   return Math.max(0, Math.round((remaining / absRate) * 60))

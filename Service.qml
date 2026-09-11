@@ -54,7 +54,7 @@ Item {
     } else {
       powerToastMessage = "CHARGER CONNECTED"
       var sub2 = "On AC power — " + percent + "%"
-      if (percent >= 100 || isFullyCharged) sub2 += " • Fully charged"
+      if (percent >= 100 || (isFullyCharged && percent >= 99)) sub2 += " • Fully charged"
       else if (minutesUntilFull >= 0) sub2 += " • " + minutesUntilFull + " min until full"
       powerToastSubMessage = sub2
       console.log("life-alert: charger connected at " + percent + "%")
@@ -98,7 +98,7 @@ Item {
         var upd = "Running on battery — " + percent + "%"
         upd += " • " + minutesRemaining + " min left"
         powerToastSubMessage = upd
-      } else if (!discharging && !isFullyCharged && minutesUntilFull >= 0 && powerToastSubMessage.indexOf("min until full") === -1 && powerToastSubMessage.indexOf("Fully charged") === -1) {
+      } else if (!discharging && minutesUntilFull >= 0 && powerToastSubMessage.indexOf("min until full") === -1 && powerToastSubMessage.indexOf("Fully charged") === -1) {
         var upd2 = "On AC power — " + percent + "%"
         upd2 += " • " + minutesUntilFull + " min until full"
         powerToastSubMessage = upd2

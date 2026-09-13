@@ -141,7 +141,7 @@ Item {
   function playWarning() {
     if (soundProc.running) return
     soundProc.command = [
-      "mpv", "--no-video", "--audio-display=no", "--really-quiet",
+      "/usr/bin/mpv", "--no-video", "--audio-display=no", "--really-quiet",
       "/usr/share/sounds/freedesktop/stereo/dialog-warning.oga"
     ]
     soundProc.running = true
@@ -149,7 +149,7 @@ Item {
 
   function runBatteryLowHook(level) {
     if (hookProc.running) return
-    hookProc.command = ["omarchy-hook", "battery-low", String(level)]
+    hookProc.command = ["/usr/bin/omarchy-hook", "battery-low", String(level)]
     hookProc.running = true
   }
 
@@ -183,7 +183,7 @@ Item {
   function suspendNow() {
     console.log("life-alert: suspending (countdown expired)")
     if (suspendProc.running) return
-    suspendProc.command = ["systemctl", "suspend"]
+    suspendProc.command = ["/usr/bin/systemctl", "suspend"]
     suspendProc.running = true
   }
 
